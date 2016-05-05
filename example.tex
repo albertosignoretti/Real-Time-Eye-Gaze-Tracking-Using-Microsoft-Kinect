@@ -46,6 +46,13 @@
       Pontif\'{i}cia Universidade Cat\'{o}lica do Paran\'{a} (PUCPR)\\
       Curitiba, Brazil\\
       Email:  \href{mailto:jones.granatyr@pucpr.edu.br}{jones.granatyr@pucpr.edu.br}, \href{mailto:jean.barddal@ppgia.pucpr.br}{jean.barddal@ppgia.pucpr.br}}
+   \and
+    \IEEEauthorblockN{Alberto Signoretti}
+    \IEEEauthorblockA{%
+      Graduate Program in Computer Science \\
+      State Universtity of Rio Grande do Norte (UERN)\\
+      Natal, Brazil\\
+      Email:  \href{mailto:albertosignoretti@uern.br}{albertosignoretti@uern.br}}
   }
 \else
   \author{Sibgrapi paper ID: \jemsid \\ }
@@ -56,18 +63,11 @@
 
 
 \begin{abstract}
-	This work presents a technique to identify, in real time, the region to which an user gazes at via a Kinect device.
-	Additionally, information on how long the user is staring at a determined region is measured and presented in the screen.
-	Our proposal has two steps.
-	In the first step, gaze capturing is performed in two scenarios, the first determined by predefined regions, while in the second the regions are created according to how long the user is gazing at each region.
-	The second stage, although preliminary, performs classification to identify the iris position.
-	As results, our technique showed that it is possible to identify and track for how long the user is gazing at a region, regardless whether it was predefined or not.
-	Besides, the capture of data related to user's eyes were correctly captured and k-means clustering was performed with success, thus, allowing the identification of iris position (in a future work?).
-\todo[inline]{Mas isso eh trabalho futuro ou ja foi feito?}
+	This work presents a technique used to identify in real time, the focus region of the user's gaze through of a Kinect device, and how long the user’s focus is maintained over a specific region of the environment. The technique is divided in two stages. In the first one, the capture of the gaze is performed in two parts, the first one uses predefined regions, and the second is based on regions created using as criteria the user focus of the length of time on each part of the scenario. The second stage performs an algorithm of classification to identify the iris position. As a result, the technique showed that is possible identify and measure how long time the user is gazing to a region and if it is predefined or not. Besides, the log of data related the user's eye were correctly captured and K-means algorithm was performed with success, with real possibilities of allow the correct identification of the iris position.
 \end{abstract}
 
 \begin{IEEEkeywords}
-	Gaze tracking; Area of interest.
+	Gaze tracking; Area of interest; Iris tracking.
 \end{IEEEkeywords}
 
 
@@ -77,7 +77,7 @@
 \todo[inline]{Jean diz: A introducao esta boa. Tem alguns detalhes que vou verificar quando acabar as outras secoes}
 	Since the beginning of mankind, vision has became one of the most important senses to stay alive in a harsh environment. 
 	In that time, vision was of the utmost importance to survive, create tools, hunt, and adapt to different environments. 
-	According to \cite{1} the advantageous capabilities of humans, e.g. sight, became crucial to survival in the first ages.
+	According to \cite{1} capabilities such as sight became crucial advantage to raise the probabilities of survival in the first ages.
 	The sight is so important that, even the eyes have communicative value well before the development of spoken language \cite{2}.
 	This assertion is so true that, after the language system has been mastered and made commonplace, eyes are still useful in communication. 
 	Eyes send obvious signals with specific messages, such as eye-rolling or subtle winks; or they can be more subtle, such as controlling eye contact to show or withhold intimacy \cite{3}.
@@ -87,26 +87,29 @@
 	For instance, gaze cues are claimed to be used from early life and continue to be given and followed throughout adulthood \cite{4}.
 	People have a tendency to orient and follow gaze cues of others and this can do this with relative ease. 
 	\todo[inline]{essa frase com helps nao fez muito sentido para mim. nao entendi o que quis dizer.}
-	This effect occurs in many situations, ranging from simple helps until the attempt to read another player in a poker game, for instance.
+    
+    \todo[inline]{Veja se ficou mais claro.}
+	This effect occurs in many situations, ranging from simple aids, as achieve some object, until the attempt to read another player in a poker game, for instance.
 
-	Because of the influence of the gaze that a person has over another, there are many studies about this subject. 
+	The influence of the gaze that a person has over another is so important that a lot of studies about this subject are found in the academia. 
 	For example, how gaze cues result in gaze or action following by the observer? 
-	The work of \cite{5} describes four studies in which the authors investigated about whether and when infants connect information about an actor's affect and perception to their later action. 
+	The work of \cite{5} describes four studies in which the authors investigated the infant's ability to connect gaze and emotional expression to intentional action.
 	In short, this work argues that gazing is a crucial way in which infants recognize the intentional behaviors of other people. 
 	The authors obtained this result by repeating an experiment with 8-month, 12-month and 14-month-old children. 
 	The experiment was to make that an adult gaze before grasp one of two objects, thereby giving cues. 
 	Then, as result they found that at the end of the first year of life, humans better predict the other's actions with the presence of gaze or emotional expression.
+    
 	Another work is the one by \cite{6}, where authors argued that social conflict is a form of relating and that gaze clues are critical to understanding the underlying cognitive processes in this phenomenon. 
 	They showed that by creating an experimental setting that reduces real life to a mixed-motive game, and analyzed the gaze patterns from 22 10- to 12-year-old children in specific game moments that could have been conducted to conflict.
 	Authors concluded that children gazes show that they are being more competitive or cooperative at different stages of the game.
 	Children avoid confrontation by averting face-directed gazes when asking for larger profits, while gaze longer to attempt to persuade others.
 
-	The current work is proposed as an extension to the latter cited one.
-	The conclusion of the authors in \cite{6} was made manually, i.e. experts watched videos of the children's games play to determine how long each children spent at each gaze to one another.
+	The present work is a proposition of a tool to automate the evaluation performed during the experiment described in \cite{6}.
+	The conclusion of these authors was made manually, i.e. experts watched videos of the children's games play to determine how long each children spent at each gaze to one another.
 	To improve this task, we provide a module that is capable of capturing an user's gaze and automatically measures the time of each gaze.
 	Using angles provided by Microsoft Kinect and vector formulas, we capture the user's gaze and its duration.
-	Additionally, we also captured and read information about users' eyes region and created a dataset composed of color information and coordinates.
-	Later, we show hour k-means clustering can be used to identify regions and similarities \todo[inline]{between what?}.
+	Additionally, the automated tool also captured and read information about users' eyes region and created a dataset composed of color information and coordinates.
+	Afterwards, it will be necessary to apply a clustering algorithm to identify regions and similarities. 
 
 	This paper is organized as follows.
 	In Section \ref{sec:relatedWork} we present related works that uses Microsoft Kinect to identify user gaze.
@@ -141,8 +144,8 @@
 	\todo[inline]{Jean diz: Secao esta ok}
     
 	As previously mentioned, the Microsoft Kinect device was used to provide the necessary information for gaze identification.
-	This section aims to discuss some important differences between the first and the second version of the device.
-	This is particularly important because most of the related works used the first version, and some new resources that has been implemented to this version can be improved.
+	This section aims to discuss some important differences between the first and the second version of this device.
+	This is particularly important because most of the related works used the first version, and the new resources implemented on the current version can improve the overall performance of the device.
 
 	This device has an infrared projector, cameras and a special microchip to track the movement of objects and people in three dimensions. 
 	Furthermore, it has a 3D depth sensor, tilt motor and microphones.
@@ -157,13 +160,13 @@
 	According to Microsoft specifications for Kinect for Windows, the Kinect v2 face recognition, motion tracking and resolution are much more precise than the Kinect v1. 
     Kinect v2 uses ``time of flight'' technology to determine the features and motion of certain objects. 
 	Besides, the v2 can process 2 gigabytes of data per second, the adopted USB 3.0 provides almost ten times faster broadband for the data transfer, 60\% wider field of vision, and it can detect and track 20 joints from 6 people’s bodies including thumbs. 
-	Besides, when using Kinect v2 is possible to detect heart rates, facial expressions and weights on limbs, along with much more extremely valuable biometric data, as one can see in Fig. \ref{fig:fig1}.
+	Besides, when using Kinect v2 is possible to detect heart rates, facial expressions and weights on limbs, along with much more extremely valuable biometric data, as one can see in Fig. \ref{fig:fig2}.
 
     \begin{figure}[t]
         \centering
         \includegraphics{figures/pic2.png}
         \caption{Kinect v2 detections.}
-        \label{fig:fig1}
+        \label{fig:fig2}
     \end{figure}
 
 	Given the improvements provided by Microsoft Kinect v2, our experiments were ran on top of it mainly because of higher image quality, reliability and precision regarding face position.
@@ -173,13 +176,13 @@
 
 	However, for the purpose of this work another class of the SDK Kinect is more important, named \emph{Kinect.Face}. 
 	Using this class, it is possible to capture some interesting information, such as: rotation orientation, face engagement, glasses, happy, is left eye closed, is right eye closed, is looking away, has mouth moved, and is mouth open. 
-	These values can be seen in Fig. \ref{fig:fig2}, where it is possible to note the information available in the screen provided by the \emph{Kinect.Face} class.
+	These values can be seen in Fig. \ref{fig:fig3}, where it is possible to note the information available in the screen provided by the \emph{Kinect.Face} method.
 
     \begin{figure}[t]
         \centering
         \includegraphics{figures/pic3.png}
         \caption{Information provided by Kinect.Face method.}
-        \label{fig:fig2}
+        \label{fig:fig3}
     \end{figure}
 
 \section{Eye-Gaze Estimation} \label{sec:eyeGazeEstimation}
@@ -218,14 +221,14 @@ This would allow a more accurate prediction of user gaze independently of head a
 	\centering
 	\includegraphics{figures/pic4.png}
     \caption{Quaternions returned by Kinect.Face method and their vertices.}
-    \label{fig:fig3}
+    \label{fig:fig4}
 \end{figure}
 
 \begin{figure}[t]
 	\centering
 	\includegraphics{figures/pic5.png}
     \caption{Predefined face points.}
-    \label{fig:fig4}
+    \label{fig:fig5}
 \end{figure}
 
 \begin{figure}[t]
@@ -235,21 +238,21 @@ This would allow a more accurate prediction of user gaze independently of head a
     \includegraphics{figures/pic6c.png}\\
 	\includegraphics{figures/pic6d.png}
     \caption{Line determined by the head angle and simulating the user gaze.}
-    \label{fig:fig5}
+    \label{fig:fig6}
 \end{figure}
 
 \begin{figure}[t]
 	\centering
 	\includegraphics{figures/pic7.png}
     \caption{Regions predefined simulating the cards and other player.}
-    \label{fig:fig6}
+    \label{fig:fig7}
 \end{figure}
 
 \begin{figure}[t]
 	\centering
 	\includegraphics{figures/pic8.png}
     \caption{Seconds observed in each region represented on the left corner of each region.}
-    \label{fig:fig7}
+    \label{fig:fig8}
 \end{figure}
 
 \begin{figure}[t]
@@ -257,42 +260,42 @@ This would allow a more accurate prediction of user gaze independently of head a
 	\includegraphics{figures/pic9a.png}\\
     \includegraphics{figures/pic9b.png}\\    
     \caption{Area of interest defined by the system.}
-    \label{fig:fig8}
+    \label{fig:fig9}
 \end{figure}
 
 \begin{figure}[t]
 	\centering
 	\includegraphics{figures/pic10.png}
     \caption{Eye region identified by the yellow rectangle.}
-    \label{fig:fig9}
+    \label{fig:fig10}
 \end{figure}
 
 \begin{figure}[t]
 	\centering
 	\includegraphics{figures/pic11.png}
     \caption{Representation of color array available by Kinect device.}
-    \label{fig:fig10}
+    \label{fig:fig11}
 \end{figure}
 
 \begin{figure}[t]
 	\centering
 	\includegraphics{figures/pic12.png}
     \caption{Indicating the face box position.}
-    \label{fig:fig11}
+    \label{fig:fig12}
 \end{figure}
 
 \begin{figure}[t]
 	\centering
 	\includegraphics{figures/pic13.png}
     \caption{Image created based on the data in the text file.}
-    \label{fig:fig12}
+    \label{fig:fig13}
 \end{figure}
 
 \begin{figure}[t]
 	\centering
 	\includegraphics{figures/pic14.png}
     \caption{K-Means test results, at top left was used K = 2, on right K = 3, next, K = 4, K = 5, K = 10 and finally K = 15.}
-    \label{fig:fig13}
+    \label{fig:fig14}
 \end{figure}
 
 \cite{Sibgrapi2016}
