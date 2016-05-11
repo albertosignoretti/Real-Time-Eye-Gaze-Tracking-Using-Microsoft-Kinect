@@ -6,6 +6,9 @@
 
 \usepackage{amsthm}
 \newtheorem{definition}{Definition}
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
 
 \usepackage{hyperref}
 
@@ -86,7 +89,7 @@
 \IEEEpeerreviewmaketitle
 
 \section{Introduction}
-\todo[inline]{Jean diz: A introducao esta boa. Tem alguns detalhes que vou verificar quando acabar as outras secoes}
+
 	Since the beginning of mankind, vision has became one of the most important senses to stay alive in a harsh environment. 
 	In that time, vision was of the utmost importance to survive, create tools, hunt, and adapt to different environments. 
 	According to \cite{1} capabilities such as sight became crucial advantage to raise the probabilities of survival in the first ages.
@@ -118,7 +121,7 @@
 	To improve this task, we provide a module that is capable of capturing an user's gaze and automatically measures the time of each gaze.
 	Using angles provided by Microsoft Kinect and vector formulas, we capture the user's gaze and its duration.
 	Additionally, the automated tool also captured and read information about users' eyes region and created a dataset composed of color information and coordinates.
-	Afterwards, it will be necessary to apply a clustering algorithm to identify regions and similarities. 
+	Afterwards, it is necessary to apply a clustering algorithm to identify regions and similarities. 
 
 	This paper is organized as follows.
 	In Section \ref{sec:relatedWork} we present related works that uses Microsoft Kinect to identify user gaze.
@@ -128,23 +131,18 @@
 
 \section{Related Work} \label{sec:relatedWork}
 
-	\todo[inline]{Jean diz: Favor verificar algumas duvidas e se as referencias estao ok}
 	In work of \cite{7}, authors proposed a system that adopts a personalized 3D face model along with an eye detection gaze through iris using the first version of Microsoft Kinect. 
 	To identify the iris they ran the Starburst algorithm \cite{8} with some modifications. 
 	This experiment was performed starting with the calibration phase, where the participants should look to nine predefined points in the screen and several images were taken of the participant face for each point observed. 
 	Then, to the phase of gaze estimation, participants were asked to gaze to a predefined point. 
 	After one session, each participant was asked to move his/her seat position before starting the next step. 
 	They performed this method several times aiming at collecting the data that was used to calibrate the system.
-	According to the results, the authors concluded that Microsoft Kinect provides more accurate gaze estimation compared with RGB images and their calibration mode reduced the degree of the error.
-	\todo[inline]{better results were achieved with rgb instead of some other color space? is that it?}
-    \todo[inline]{Não, os melhores resultados foram obtidos utilizando as imagens originadas do Kinect, em comparação com outras imagens}
+	According to the results, the authors concluded that Microsoft Kinect provides more accurate gaze estimation compared with RGB images extracted by conventional cameras and their calibration mode reduced the degree of the error.
 
 	In other work, authors in \cite{8} used a system to calibrate the iris position using the nine points method \cite{9}, which randomizes some points in the screen and asks the user to gaze each point, one by one. 
-	\todo[inline]{I could not understand the next sentence}
-    \todo[inline]{Os autores dividiram em dois grupos, o local e o global. Local eles se baseiam apenas na posição da iris, enquanto que o local é baseado em relação ao movimento da cabeça.}
 	Their tests embedded two scenarios: the first one consisted of separating the gaze motion in local motion, while the second one aimed at separating it in global motion. 
 	According to them, the local motion refers to the gaze motion driven by pupil movement and the global motion is related to motion driven by head movement. 
-	The authors compared their results with the work of \cite{9} \todo{are these citations correct?} \todo{yes} and they proposed method performs exceptionally well for the reliability and precision in gaze identification.
+	The authors compared their results with the work of \cite{9} and they proposed method performs exceptionally well for the reliability and precision in gaze identification.
 
 	In turn, authors in \cite{10} proposed a method to estimate the gaze direction in a 3D space with the first version of Microsoft Kinect. 
 	The authors combined depth and visual data to create texture 3D mesh of the scene. 
@@ -152,7 +150,6 @@
 	As a result, authors could estimate the gaze direction under challenging head poses and low-resolution eye images.
 
 \section{Microsoft Kinect} \label{sec:technologyUsed}
-	\todo[inline]{Jean diz: Secao esta ok}
     
 	As previously mentioned, the Microsoft Kinect device was used to provide the necessary information for gaze identification.
 	This section aims to discuss some important differences between the first and the second version of this device.
@@ -212,7 +209,7 @@
 \begin{figure}[t]
 	\centering
 	\includegraphics{figures/pic4.png}
-    \caption{Quaternions returned by Kinect.Face method and their vertices.}
+    \caption{Quaternions returned by \emph{Kinect.Face} method and their vertices.}
     \label{fig:fig4}
 \end{figure}
 
@@ -223,7 +220,18 @@
 	The conversion code that transform the Euler values to degrees can be seen in the following code snippet, where the $y$, $w$, and $z$ variables represent the angles provided by Kinect sensor and $yawD$, $pitchD$ and $rollD$ are variables that will receive the values representing the degrees after the conversion.
     
 \todo[inline]{Acho que isso seria melhor descrito por equacoes.}
-\todo[inline]{Concordo}
+\todo[inline]{Pelo que eu testei n\~{a}o ficou legal em equação, al\'{e}m disso, n\~{a}o est\'{a} citado no texto como código? E como se coloca legenda em codigo?}
+Code 1: Convert face rotation quaternion to Euler angles in degrees.
+\lstset{language=C++,
+             basicstyle=\footnotesize,
+             numbers=left,
+			 stepnumber=1,
+			 firstnumber=1,
+             captionpos=b,
+             numberstyle=\footnotesize,
+             frame=shadowbox,
+             rulesepcolor=\color{black}}
+
 \begin{lstlisting}
 double yawD, pitchD, rollD;
 pitchD = Math.Atan2(2*((y*z)+(w*x)),
@@ -238,8 +246,8 @@ rollD = Math.Atan2(2*((x*y)+(w*z)),
 
 	After the conversion, it is possible to calculate the heading vector. 
 	One of the objective of this work is to trace a line from each point located in user face, such as: one point in each eye, one in the nose and one in each side of the mouth, as shown in Fig. \ref{fig:fig5}. 
-	From these points, a line will be generated based on the angle of user head \todo[inline]{frase incompleta?}\todo[inline]{Veja se ficou mais claro}. 
-	Therefore, to trace the line for each point in the system screen is necessary two points: begin point and end point, both provided in the pixels format). 
+	From these points, a line will be generated based on the angle of user head. 
+	Therefore, to trace this line it is necessary two points: begin point and end point, both provided in the pixels format). 
 	The begin point is determined by the points in user face and the end point must be calculated from the angle of user head. 
 	To calculate the end point a normalization is necessary to inform the orientation of the angles, informed by the \emph{Kinect.Face} method. 
 	The normalization was performed given Equations \ref{eq:normalizationX} and \ref{eq:normalizationY}, where $X$ is the pitch and $Y$, both provided by \emph{Kinect.Face}.
@@ -259,19 +267,37 @@ rollD = Math.Atan2(2*((x*y)+(w*z)),
         \label{fig:fig5}
     \end{figure}
 
-	After the normalization, the angle was converted into a vector by applying the arc cosine formula and converting the angle from degress to radians.
-	Equation \ref{eq:pitchTransformation} depicts the transformation to the pitch value, where $\arccos$ is the inverse cosine function and $normX$ is the normalized pitch angle.
-    \todo[inline]{nao eh necessario realizar essa conversao para as outras componentes, i.e. yaw e roll?}
-    \todo[inline]{não, pois para o objetivo do projeto aqueles angulos não interessa a conversão.}
+	After the normalization, the angle was converted into a vector by applying the arc cosine formula and converting the angle from degress to radians, this was done to axis X and Y.
+	Equation \ref{eq:pitchTransformation} depicts the transformation to the pitch value, where $\arccos$ is the inverse cosine function and $normX$ is the normalized pitch angle. The equation \ref{eq:pitchTransformation} depicts the transformation to the yaw value, where $\arccos$ is the inverse cosine function and $normY$ is the normalized yaw angle.
+
 	\begin{equation}
-    	P = \arccos{(normX)} \times \frac{180}{\pi}
+    	PNX = \arccos{(normX)} \times \frac{180}{\pi}
 		\label{eq:pitchTransformation}
 	\end{equation}
-	
-    \todo[inline]{a definicao do end point nao esta nem um pouco clara}
-    \todo[inline]{para gerar uma linha é necessário dois pontos, um de inicio e um de fim. O de inicio é informado pelo kinect, e o ponto final é o valor de P (se eu não me engano) hehe}
-	Finally, after this process these values were used to mark the end point of the line. 
-	In short, the begin point is provided by SDK Kinect through the method \emph{Kinect.Face} and the end point was calculated after a series of formulas and conversions starting from the quaternions. 
+    
+    \begin{equation}
+    	PNY = \arccos{(normY)} \times \frac{180}{\pi}
+		\label{eq:yawTransformation}
+	\end{equation}
+
+	\todo[inline]{acho que falta uma equacao definindo o ponto final da reta}
+  	\todo[inline]{fiz algumas modificações nessa parte}
+	Finally, after this process these values were used to define the end point of the line. Although, first was  necessary set a bias value to correct the X axis of final point. Equation \ref{eq:lengthline} depicts this bias value, where $PNY$ is the yaw angle in radians, the numbers 12 and 140 are values predefined based in visual tests where the final point in relation of X axis was in a better position.
+    
+    \begin{equation}
+    	bias = (PNY \times 12) \div 140
+		\label{eq:lengthline}
+	\end{equation}
+    
+      Then, the equation \ref{eq:finalpoint} depicts the point where is located the final point of the line according with yaw normalized angle, where $PNY$ is the yaw angle in radians, the $bias$ is a bias to correct the X axis, $posH$ is the value of the height of the screen, and the number 3 is a value that is possible to define the length of the line.
+    
+    \begin{equation}
+    	PF = Point(PNY \times bias, posH \times 3)
+		\label{eq:finalpoint}
+	\end{equation}
+   
+     
+	In short, the begin point is provided by Kinect SDK through the method \emph{Kinect.Face} and the end point was calculated after a series of formulas and conversions starting from the quaternions. 
 	In Fig. \ref{fig:fig6} it is possible to visualize the line generated by the angle of user head at each head move. 
 	In the first image, it is possible note that the user tilted the head to the left and were created lines predicting where the user gaze is. 
 	This effect happens in the other images, where lines predicting the user gaze were created according to the tilt of user head.
@@ -288,7 +314,7 @@ rollD = Math.Atan2(2*((x*y)+(w*z)),
 
 \subsection{Predefined Areas}
 
-	As mentioned earlier on this paper, this work is an extension of \cite{6}, so it is necessary to define the regions where will be measure the time of the user gaze in each of these regions. 
+	As mentioned earlier, this work is an extension of \cite{6}, so it is necessary to define the regions where will be measure the time of the user gaze in each of these regions. 
 	The experiment accomplished in Campos was a game with cards. 
 	Because of that, the region where the players will gaze is under his head (on the table) and to the other player, located in front of him. 
 	Thus, we defined in this project four regions on the bottom of the screen (simulating the cards positions) and one on middle of the screen (simulating the other player), as we can see in Fig. \ref{fig:fig7}.
@@ -312,59 +338,62 @@ rollD = Math.Atan2(2*((x*y)+(w*z)),
         \caption{Seconds observed in each region represented on the left corner of each region.}
         \label{fig:fig8}
     \end{figure}
-	\todo[inline]{Jean diz: li ate aqui}
+
+
 \subsection{Non-predefined Areas}
 
-The first step of this work showed that it is possible to capture the time and the region where the user is gazing. 
-However, in some cases the experience do not have a pre-defined area and the system must be able to recognize any special area that has the user attention. 
-Because of that, a second prototype was made, where the system recognize an area that was gazing by the user. 
-Afterwards, we built a rectangle and counted the seconds that the user is gazing for this area (Fig. \ref{fig:fig9}). 
-This area is considered important when the user gaze at least for 2 seconds. 
-When there is a change of gaze to another point of interest and at least for 2 seconds, another region is built. 
-As can be noted in Fig. \ref{fig:fig9}, in the first image the user gazed to a non-specific position at least by 2 seconds, and the system identified that can be an area of interest and created a square. 
-Then, in the other image, the user gazed to another position at least by 2 seconds, and the system created another area of interest. 
-Whether the gaze is in a region, which was previously defined, the timer continues where it left off.
+	In the first step of this work we showed that it is possible to capture the time and the region where the user is gazing at. 
+	However, in some cases the experiment does not have a pre-defined area and the system must be able to recognize any special area that has the user's attention. 
+	Based on that, a second prototype was made, where the system recognizes an area that was gazed by the user. 
+	Afterwards, we built a rectangle and counted the seconds that the user is gazing for this area (Fig. \ref{fig:fig9}). 
+	This area is considered important when the user gaze at least for 2 seconds. 
+	When there is a change of gaze to another point of interest and at least for 2 seconds, another region is built. It is possible to change this quantity of time before running the experiment in the program code and this quantity was chosen randomly.
+	As can be noted in Fig. \ref{fig:fig9}, in the first image the user gazed to a non-specific position at least by 2 seconds, and the system identified that can be an area of interest and created a square. 
+	Then, in the other image, the user gazed to another position at least by 2 seconds, and the system created another area of interest. 
 
-\begin{figure}[t]
-	\centering
-	\includegraphics{figures/pic9a.png}\\
-    \includegraphics{figures/pic9b.png}\\    
-    \caption{Area of interest defined by the system.}
-    \label{fig:fig9}
-\end{figure}
+    \begin{figure}[t]
+        \centering
+        \includegraphics{figures/pic9a.png}\\
+        \includegraphics{figures/pic9b.png}\\    
+        \caption{Area of interest defined by the system.}
+        \label{fig:fig9}
+    \end{figure}
 
-	However, this method uses the head position and it can be a problem. 
-	For example, the user can turn the head to the left but your gaze is on the center. 
+	However, this method uses the head position, which can be problematic.
+	For instance, the user can turn the head to the left but your gaze is on the center. 
 	It can happen because of the iris position, and for this reason it is necessary a future study about how to capture the iris position. 
-	On the next section we explain the performed tests to reach this goal.
+    In the following section we detail tests performed to reach this goal.
 
 \section{Data Extraction} \label{sec:dataExtraction}
 
 	After the identification of the region where the user could be gazing, it was necessary to develop a more accurate system. 
 	This system aims to identify user’s iris and predict with more precision the region where is the gaze. 
-	To reach this goal, firstly it was necessary to define the user eye region to collect the data provided by the Kinect device.
-	In our prototype, were captured the data of one eye. 
-	It was done because the capturing process related to all data provided by Microsoft Kinect is impractical. 
-	It happens because there are a great amount of unnecessary information to the project, then, from the point created by Kinect above the user eye, it was created a rectangle (Fig. \ref{fig:fig10}) to visualize what is the region being captured. 
+	To reach this goal, it was necessary to define the user eye region to collect the data provided by the Kinect device.
+	In our prototype, were captured the data of one eye since capturing all data provided by Microsoft Kinect is impractical.
 	In this sense, the unnecessary information was reduced, i.e., only information regarding the eyes were captured.
+    However, our approach is can be easily extended by paralleling this same procedure for both eyes.
 
-  \begin{figure}[t]
-      \centering
-      \includegraphics{figures/pic10.png}
-      \caption{Eye region identified by the yellow rectangle.}
-      \label{fig:fig10}
-  \end{figure}
+    \begin{figure}[t]
+        \centering
+        \includegraphics{figures/pic10.png}
+        \caption{Eye region identified by the yellow rectangle.}
+        \label{fig:fig10}
+    \end{figure}
 
-	Using the rectangle coordinates around the eye, it is possible to read a lot of information, as, the position of each pixel in the screen, the color of each pixel, depth of each pixel, values of luminosity, values of infrared, etc. 
+	Using the rectangle coordinates around the eye, it is possible to read a lot of information, e.g. the position of each pixel in the screen, the color of each pixel, depth of each pixel, values of luminosity, values of infrared. 
 	However, only values that allow the system to make possible to identify the iris of the user inside of this region, were read in our experiments: R (red), G (green), B (blue), A (alpha control color opacity), Hex (hexadecimal value color), POS (pixel position inside of pixel array available by Kinect), X and Y (coordinate X and Y of pixel).
-	These data were obtained from an array that is available by the Kinect device. This array has 8294400 positions, independently of the resolution of the display. 
-	It is defined by the multiplication of the Kinect camera resolution (1920 * 1080) and this result is multiplied by four (representing R, G, B and A values). 
-	Thereby, each position represent a color or opacity value. Each screen line is represented by 7680 array positions, also not mattering the screen resolution. In other words, the first 7680 array positions represent colors and opacity of the first line of pixels of the screen (Fig. \ref{fig:fig11}). 
+	These data were obtained from an array that is available by the Kinect device. 
+    This array has 8,294,400 positions, independently of the resolution of the display. 
+	It is defined by the multiplication of the Kinect camera resolution (1920 x 1080) and this result is multiplied by four (representing R, G, B and A values). 
+	Thereby, each position represent a color or opacity value. 
+    Each screen line is represented by 7,680 array positions, also not mattering the screen resolution. 
+    In other words, the first 7,680 array positions represent colors and opacity of the first line of pixels of the screen (Fig. \ref{fig:fig11}). 
 	This value is obtained by dividing the total of the array positions for the resolution of Kinect camera, which is 1080p. 
 	As mentioned before, each pixel of the screen is represented by four positions of the array, exemplifying, the 0, 1, 2 and 3 position of the array represent the pixel located in position 0x0 (X and Y) in screen coordinates, and the positions 4, 5, 6 and 7 of the array represent the pixel in position 0x1 (X and Y) in screen coordinates, and so forth.
-	This approach to color representation used in Kinect presents some difficulties, such as the size of the array is constant independently of the screen resolution. 
+	This approach to color representation used in Kinect poses some difficulties, such as the size of the array is constant independently of the screen resolution. 
 	The problem happens because of the position of determined pixels in a 1920 x 1080 screen resolution, so the set of four indices in array (that represent these pixels), will be different in other resolution. 
-	For example, if we have the following positions: X = 10 and Y = 0 (first row tenth pixel) at a 1920 x 1080 resolution, it will read the values 40, 41, 42 and 43 of index position of array. On the other hand, in a 800 x 600 resolution the values in array that will be read are: 96, 97, 98 and 99 index position of array. 
+	For example, if we have the following positions: X = 10 and Y = 0 (first row tenth pixel) at a 1920 x 1080 resolution, it will read the values 40, 41, 42 and 43 of index position of array. 
+    On the other hand, in a 800 x 600 resolution the values in array that will be read are: 96, 97, 98 and 99 index position of array. 
 	Due to this fact, it was necessary to create a heuristic that allows the reading of the correct positions of the array, regardless of display resolution.
 
   \begin{figure}[t]
@@ -374,57 +403,62 @@ Whether the gaze is in a region, which was previously defined, the timer continu
       \label{fig:fig11}
   \end{figure}
 
-	Thereby, to capture the information inside the rectangle created around the user eye (Fig. \ref{fig:fig10}), it was necessary to identify which array index each border was being represented inside of array that represent the screen (Fig. \ref{fig:fig12}), regardless of display resolution. 
+	Thereby, to capture the information inside the rectangle created around the user eye (Fig. \ref{fig:fig10}), it was necessary to identify which array index each border was being represented inside of array that represent the screen (Fig. \ref{fig:fig11}), regardless of display resolution. 
 	This it is necessary because the array available by Kinect, as mentioned, has 8294400 positions, representing the color of each pixel in the screen, but we just need the positions that represent the user eye. 
-	As can be seen in Fig. \ref{fig:fig12}, it is necessary search in the array the index that represent each border of the screen. 
-	At a first moment, it was necessary to determine an adjustment variable named sigma, which is calculated as follows:
-double sigma=(double)1080-actualHeight) / actualHeight;
+	In this way, it is necessary a search in the array the index that represents each border of the rectangle around the user eye (Fig. \ref{fig:fig12}). 
+	At a first moment, it was necessary to determine an adjustment variable named $\sigma$, which is calculated according to Equation \ref{eq:sigma}, where $aH$ is the height in pixels of the display resolution.
+    \begin{equation}
+    	\sigma = \frac{(1080 - aH)}{aH}
+		\label{eq:sigma}
+	\end{equation}
+    
+	After the computation of sigma, one must identify in which axis (X or Y) each rectangle line is positioned, given Equations \ref{eq:pt1} through \ref{eq:pt4}, where $aH$ is height in pixels of the display resolution and $aW$ is its width; $fBPos.Top$ is most on the top position on axis Y; $fBPos.Right$ is most on the right position on axis X; $fBPos.Bottom$ is lower pixel in Y; and $fBPos.Left$ is the position to the left in X.
+    
+	\begin{equation}
+		cFTop = \floor*{\frac{fBPos.Top \times aH}{1080}}
+        \label{eq:pt1}
+	\end{equation}
+    
+    \begin{equation}
+		cFRight=\floor*{\frac{fBPos.Right \times aW}{1920}}
+	\end{equation}
+    
+    \begin{equation}
+		cFBot=\floor*{\frac{fBPos.Bottom \times aH}{1080}}
+	\end{equation}
+    
+    \begin{equation}
+		cFLeft=\floor*{\frac{fBPos.Left \times aW}{1920}}
+		\label{eq:pt4}
+	\end{equation}
 
-where:
-	sigma: adjustment variable;
-	actualHeight: height in pixels of the display resolution.
 
-After the sigma is calculated, it is necessary identify in which axis (X or Y) each rectangle line is positioned, as follows:
-int correctFCPTop=(int)faceBoxPosition.Top*actualHeight/1080;
-int correctFCPRight=(int)faceBoxPosition.Right*actualWidth/1920;
-int correctFCPBot=(int)faceBoxPosition.Bottom*actualHeight/1080;
-int correctFCPLeft=(int)faceBoxPosition.Left*actualWidth/1920;
-
-where:
-	actualHeight: height in pixels of the display resolution;
-	actualWidth: width in pixels of the display resolution;
-	faceBoxPosition.Top: most on the top position on axis Y;
-	faceBoxPosition.Right: most on the right position on axis X
-	faceBoxPosition.Bottom: most on the bottom position on axis Y.
-	faceBoxPosition.Left: most on the left position on axis X;
-
-  \begin{figure}[t]
-      \centering
-      \includegraphics{figures/pic12.png}
-      \caption{Indicating the face box position.}
-      \label{fig:fig12}
-  \end{figure}
+    \begin{figure}[t]
+        \centering
+        \includegraphics{figures/pic12.png}
+        \caption{Indicating the face box position.}
+        \label{fig:fig12}
+    \end{figure}
 
 	After the retrieval of the coordinates, it is identified which index of array colors that each rectangle corner represents.
 	To reach this goal it was necessary to execute the Code 2. 
-	In this code, to find determined point, for example, the point that represent on the left on the top of the rectangle, was necessary multiple the value that define the border on the left (correctFCPLeft) by the resolution of the screen (1920). 
+	In this code, to find determined point, for example, the point that represent on the left on the top of the rectangle, was necessary multiple the value that define the border on the left ($cFLeft$) by the resolution of the screen (1920). 
 	With this result, divide by the width screen. Then, multiply by 4, because is four fields (values of R, G, B and A). 
-	Finally for this point, it is necessary sum this result with the result of the next operation, that is, multiply the 7680 value (that is the number of index in one row of the array) by the sum of the number that represent the top position (correctFCPTop) with this same value, but truncated, multiplied with the sigma value.
+	Finally for this point, it is necessary sum this result with the result of the next operation, that is, multiply the 7,680 value (that is the number of index in one row of the array) by the sum of the number that represent the top position ($cFTop$) with this same value, but truncated, multiplied by $\sigma$.
 
 \todo[inline]{Equations}
 Code 2: Calculate the array index that represent each corner of the rectangle.
 \begin{lstlisting}
-initialPointTop = Convert.ToInt64(Math.Truncate(((((int)correctFCPLeft * 1920) / actualWidth) * 4) + (7680 * ((int)correctFCPTop + Math.Truncate((int)correctFCPTop * sigma)))));
-finalPointTop = Convert.ToInt64(Math.Truncate(((((int)correctFCPRight * 1920) / actualWidth) * 4) + (7680 * ((int)correctFCPTop + Math.Truncate((int)correctFCPTop * sigma)))));
-initialPointBot = Convert.ToInt64(Math.Truncate(((((int)correctFCPLeft * 1920) / actualWidth) * 4) + (7680 * ((int)correctFCPBot + Math.Truncate((int)correctFCPBot * sigma)))));
-finalPointBot = Convert.ToInt64(Math.Truncate(((((int)correctFCPRight * 1920) / actualWidth) * 4) + (7680 * ((int)correctFCPBot + Math.Truncate((int)correctFCPBot * sigma)))));
+iPTop = Convert.ToInt64(Math.Truncate(((((int)cFLeft * 1920) / aW) * 4) + (7680 * ((int)cFTop + Math.Truncate((int)cFTop * sigma)))));
+fPTop = Convert.ToInt64(Math.Truncate(((((int)cFRight * 1920) / aW) * 4) + (7680 * ((int)cFTop + Math.Truncate((int)cFTop * sigma)))));
+iPBot = Convert.ToInt64(Math.Truncate(((((int)cFLeft * 1920) / aW) * 4) + (7680 * ((int)cFBot + Math.Truncate((int)correctFCPBot * sigma)))));
+fPBot = Convert.ToInt64(Math.Truncate(((((int)cFRight * 1920) / aW) * 4) + (7680 * ((int)cFBot + Math.Truncate((int)cFBot * sigma)))));
 \end{lstlisting}
 
-
-	Finally, after found the index in the array that represent the border of the rectangle around the user eye, all values inside of this rectangle were read and written in a text file. 
+	Finally, after computing the index in the array that represents the border of the rectangle around the user's eye, all values inside of this rectangle were read and written in a text file. 
 
 	To validate if the capture of the values were in a correct way, it was generated an image from the data of this text file. 
-	In this way, once can be see that the capture was done in a way that is possible identify the user eye, as can be seen in Fig \ref{fig:fig13}.
+	In this way, once can be see that the capture was done in a way that is possible identify the user's eye, as depicted in Fig. \ref{fig:fig13}.
 
     \begin{figure}[t]
       \centering
@@ -435,31 +469,33 @@ finalPointBot = Convert.ToInt64(Math.Truncate(((((int)correctFCPRight * 1920) / 
 
 \subsection{Clustering}
 
-	With the text file created in the extraction data step, it was used a clustering algorithm called K-Means \cite{13}. 
-	This algorithm use a simple and easy way to group a given data set through a certain number of clusters (assume k clusters) fixed a priori. 
-	The main idea is to define k centroids, one for each cluster. 
-	These centroids can be placed using some methodologies because of its location, depending upon the results may be different. 
-	In this way, one choice is to place them as much as possible far away from each other. 
+	With the text file created in the extraction data step, it was used a clustering algorithm called k-means \cite{13}. 
+	This algorithm use a simple and easy way to group a given data set through a $k$ number of clusters, where $k$ is defined a priori or by some optimization process.
+	In practice, k-means defines $k$ centroids, which are initially located somewhere in the feature space.
+    There are several strategies to define the first location of these centroids, and one of the most common choices is to place them equally distributed along the problem space.
 	The next step is to take each point belonging to a given dataset and associate it to the nearest centroid. 
-    When no point is pending, the first step is completed and an early groupage is done. 
-	At this point, we need to re-calculate the k new centroids as barycenter’s of the clusters resulting from the previous step. 
-	After we have these k new centroids, a new binding has to be done between the same data set points and the nearest new centroid. 
-	A loop is generated and as a result, we may notice that the k centroids change their location step by step until no more changes are done. 
-	In other words, centroids do not move any more.
+    When no point is pending, the first step is completed and an early clustering is done. 
+	At this point, the $k$ centroids are recomputed as the barycenters of the clusters obtained in the previous space.
+	After we have these $k$ new centroids, a new binding has to be done between the same data set points and the nearest new centroid. 
+    This process is repeated until the centroids do not change in comparison to the previous step or given some other criterion.
+
+    \begin{figure}[t]
+        \centering
+        \resizebox{.35\columnwidth}{!}{
+            \includegraphics{figures/kmeans.png}
+        }\\
+        \caption{K-Means test results, from top to bottom: $k=2$, $k=3$, $k=4$, $k=5$, $k=10$ and $k=15$.}
+        \label{fig:kmeans}
+    \end{figure}
+
 	Although it can be proved that the procedure will always terminate, the k-means algorithm does not necessarily find the most optimal configuration. 
 	The algorithm is also significantly sensitive to the initial randomly selected cluster centers. 
 	The k-means algorithm can be run multiple times to reduce this effect.
-	In short, this algorithm has a characteristic to try to find similarities between examples and then put a classification in these (cluster number). 
+	In short, this algorithm has a characteristic to try to find similarities between examples and then put a classification in these (cluster number). In our project, the data used was the values in a text file representing the data inside of the rectangle around the user eye. 
 	The main idea is attempt to find the user iris based on the classification made by this clustering algorithm. 
-	Therefore, we have made tests using the k value equal 2, 3, 4, 5, 10 and 15, and its results can be seen in Fig \ref{fig:fig14}.
-	As can be seen in Fig \ref{fig:fig14}, in all tests there are possibilities to identify the iris position for the reason that the examples that identify the iris are in at least one cluster. 
-\todo[inline]{Está faltando as outras imagens que fazem parte dessa figura.}
-\begin{figure}[t]
-	\centering
-	\includegraphics{figures/pic14.png}
-    \caption{K-Means test results, at top left was used K = 2, on right K = 3, next, K = 4, K = 5, K = 10 and finally K = 15.}
-    \label{fig:fig14}
-\end{figure}
+	Therefore, we have made tests using the k value equal 2, 3, 4, 5, 10 and 15, and its results can be seen in Fig. \ref{fig:kmeans}.
+	As can be seen in Fig. \ref{fig:kmeans}, in all tests it was possible to segment the iris in at least one cluster.
+
 
 \section{Conclusion and Future Work} \label{sec:conclusionAndFutureWork}
 \todo[inline]{Jean diz: conclusao esta quase ok tb}
@@ -479,10 +515,8 @@ finalPointBot = Convert.ToInt64(Math.Truncate(((((int)correctFCPRight * 1920) / 
 	Next, to improve the used technique, k-means clustering was performed to predict the user iris position. 
 	This algorithm received as input the data which represent the user eye, and then the clusters were created according with similarity of each pixel. 
 	Based on that, it was possible to perceive that the user iris, depending of the number of clusters, can be easily identified.
-	As future work, we intend to make the identification of the data that represent the user iris, in an automatic and real time way. 
+	As future work, we intend to make the identification of the data that represent the user iris, in an automatic and real time fashion. 
 	This would allow a more accurate prediction of user gaze independently of head angle.
-	\todo[inline]{Again, this is not clear if you used or not the iris positioning}
-    \todo[inline]{O uso da posição da Iris para determinar para onde o usuário está olhando é para os trabalhos futuros.}
 
 
 \bibliographystyle{IEEEtran}
